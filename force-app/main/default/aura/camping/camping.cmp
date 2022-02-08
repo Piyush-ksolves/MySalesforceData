@@ -1,0 +1,10 @@
+<aura:component >
+    <c:campingList/>    
+</aura:component>
+<!-- 
+Create a campingList component that contains an ordered list of camping supplies 
+that include Bug Spray, Bear Repellant, and Goat Food
+Create a campingHeader component that displays Camping List wrapped in an H1 tag with 
+a font size of 18
+Create a camping component that contains the campingHeader and campingList components
+-->

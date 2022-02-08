@@ -1,0 +1,88 @@
+<aura:component controller="DisplayObjectDetail" implements="flexipage:availableForAllPageTypes,force:appHostable">
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/><!--Load object name from apex-->
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/> <!--Use for spinner -->
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/><!--Use for spinner -->
+    
+    <aura:attribute name="spinner" type="boolean" default="FALSE"/><!--Use for spinner -->
+    <aura:attribute name="objectMap" type="Map"/><!--Use to store object name -->
+    <aura:attribute name="showError" type="boolean"/><!--Use for aura:if tag when error occur -->
+    <aura:attribute name="showMultiPicklist" type="boolean"/><!--Use for aura:if tag to show Multipicklist -->
+    <aura:attribute name="errorMessage" type="String"/><!--Store error message-->
+    <aura:attribute name="queryDisplay" type="String"/><!--Store SOQL query string-->
+    <aura:attribute name="SelectedObject" type="String"/><!--Store object Label that selected from picklist-->
+    <aura:attribute name="objectApiname" type="String"/><!--Store object Apiname that selected from picklist-->
+    <aura:attribute name="GenreList" type="List" default="[]" description="Store Available Fields"/>
+    <aura:attribute name="selectedGenreList" type="List" default="[]" description="Stroe Selected Fields"/>
+    
+    <!--Use for spinner show when we fetch data from apex-->
+    <aura:if isTrue="{!v.spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading...</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>  
+    
+    <!--Show Choose Object Picklist-->
+    <div class="slds-m-around--xx-large">
+        <div class="container-fluid">
+            <div class = "slds-size--3-of-8">
+                <div class="form-group">
+                    <lightning:select aura:id="objectPicklist" value="{!v.SelectedObject}" onchange="{!c.handleOnChange}" label="CHOOSE OBJECT" required="true">
+                        <aura:iteration items="{!v.objectMap}" var="item" indexVar="index">
+                            <!--<option text="{!item.value}" value="{!item.key}" selected="{!item.key==v.Plv}" />-->
+                            <option value="{!item.key}" selected="{!item.value==v.SelectedObject}" text="{!item.value}"/> 
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!--Show Multipicklist When Object is Selected-->
+    <div class="slds-m-around_xx-large">
+        <aura:if isTrue="{!v.showMultiPicklist}">
+            <lightning:dualListbox aura:id="selectGenre"
+                                   name="Genre"
+                                   label="CHOOSE FIELDS"
+                                   sourceLabel="AVAILABLE FIELDS"
+                                   selectedLabel="SELECTED FIELDS"
+                                   options="{!v.GenreList }"
+                                   value="{!v.selectedGenreList}"
+                                   onchange="{!c.handleFieldsChange}"/>
+        </aura:if>
+    </div>
+    
+    <div class="slds-m-around_xx-large">
+        <!--Show Query Textarea and button if fields selected-->
+        <aura:if isTrue="{!v.queryDisplay}">
+            <lightning:textarea aura:id="mytextarea" name="input1" label="Enter Query Here" value="{!v.queryDisplay}" onchange="{!c.handleChangeQuery}"/>
+            <lightning:button variant="brand" label="Execute Query" onclick="{!c.getExecuteQuery}" />
+            <br/>
+            <br/>
+        </aura:if>
+        
+        <!--Show Error Message Error in Query Else Show Table -->
+        <aura:if isTrue="{!v.showError}">
+            <br/>
+            <div class="slds-notify slds-notify_toast slds-theme_error">
+                <span class="slds-assistive-text">ERROR</span>
+                <div class="slds-notify__content">
+                    <h5 class="slds-text-heading_small slds-align_absolute-center">Error Message </h5>
+                    <p class="slds-align_absolute-center">{!v.errorMessage}</p>                
+                </div>
+            </div>
+        </aura:if>
+        
+            <div class="slds-scrollable_x"> 
+                <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal slds-table_col-bordered">
+                    <tbody id='sfdctable' />
+                </table> 
+            </div>
+       
+    </div>
+    
+</aura:component>

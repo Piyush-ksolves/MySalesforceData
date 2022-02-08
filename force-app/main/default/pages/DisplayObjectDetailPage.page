@@ -1,0 +1,30 @@
+<apex:page controller="DisplayObjectDetail">
+<apex:form > 
+      <apex:pageBlock >
+          <apex:pageBlockSection columns="2">
+
+              <apex:pageBlockSectionItem >
+                  <apex:outputlabel value="Object Names :"/> 
+                      <apex:actionRegion >      
+                           <apex:selectList value="{!selectedObject}" size="1">
+                                    <apex:selectOptions value="{!ObjectNames}"/>
+                                    <apex:actionSupport event="onchange" rerender="myFields"/>
+                            </apex:selectList>
+                     </apex:actionRegion>                         
+              </apex:pageBlockSectionItem>
+
+              <apex:pageBlockSectionItem >
+                      <apex:outputlabel value="Field Names :"/>   
+                      <apex:outputPanel id="myFields">   
+                        <apex:actionRegion >  
+                           <apex:selectList value="{!selectedField}" size="1">
+                                <apex:selectOptions value="{!ObjectFields}"/>
+                            </apex:selectList>
+                        </apex:actionRegion>      
+                     </apex:outputPanel>
+              </apex:pageBlockSectionItem>
+
+          </apex:pageBlockSection>
+      </apex:pageBlock>
+  </apex:form>
+</apex:page>

@@ -1,0 +1,92 @@
+<!--
+Add an attribute named items with the type of an array of Camping_Item__c custom objects
+
+Add an attribute named newItem of type Camping_Item__c with default Quantity__c 
+and Price__c values of 0
+
+The component displays the Name, Quantity__c, Price__c, and Packed__c form fields 
+with the appropriate input component types and values from the newItem attribute
+
+The Quantity__c field accepts a number that's at least 1
+-->
+<aura:component controller="CampingListController">
+    <aura:attribute name="items" type="Camping_Item__c[]"/>
+    <aura:attribute name="newItem" type="Camping_Item__c" default="{'Name':'',
+                                                                   'Quantity__c':0,
+                                                                   'Price__c':0,
+                                                                   'Packed__c':false,
+                                                                   'sobjectType':'Camping_Item__c'}"/>
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <c:campingHeader/>
+    <!-- / PAGE HEADER -->
+    <!-- NEW CAMPING FORM -->
+    <lightning:layout>
+        <lightning:layoutItem padding="around-small" size="6">
+            <!-- [[ Camping form goes here ]] -->
+            <!-- CREATE NEW CAMPING -->
+            <div aria-labelledby="newcampingform">
+                <!-- BOXED AREA -->
+                <fieldset class="slds-box slds-theme_default slds-container_small">
+                    <legend id="newcampaignform" class="slds-text-heading_small
+                                                        slds-p-vertical_medium">
+                        Add Campaign
+                    </legend>
+                    
+                    <!-- CREATE NEW Campaign FORM -->
+                    
+                    <form class="slds-form--stacked">
+                        
+                        <!-- For Name Field -->
+                        <lightning:input aura:id="campingform" label="Camping Name"
+                                         name="campingname"
+                                         value="{!v.newItem.Name}"
+                                         required="true"/>
+                        <!-- For Quantity Field -->
+                        <lightning:input type="number" aura:id="campingform" label="Quantity"
+                                         name="campingamount"
+                                         min="1"
+                                         value="{!v.newItem.Quantity__c}"
+                                         messageWhenRangeUnderflow="Enter minimum 1 Quantity"/>
+                        <!-- For Price Field -->
+                        <lightning:input aura:id="campingform" label="Price"
+                                         formatter="currency"
+                                         name="campingclient"
+                                         value="{!v.newItem.Price__c}"
+                                         />
+                        <!-- For Check Box -->
+                        <lightning:input type="checkbox" aura:id="campingform" label="Packed"
+                                         name="campingreimbursed"
+                                         checked="{!v.newItem.Packed__c}"/>
+                        
+                        <lightning:button label="Create Camping"
+                                          class="slds-m-top--medium"
+                                          variant="brand"
+                                          onclick="{!c.clickCreateItem}"/>
+                    </form>
+                    
+                    <!-- / CREATE NEW CAMPING FORM -->
+                </fieldset>
+                <!-- / BOXED AREA -->
+            </div>
+            <!-- / CREATE NEW CAMPING -->
+        </lightning:layoutItem>
+    </lightning:layout>
+    <!-- / NEW CAMPING FORM -->
+    <div class="slds-card slds-p-top--medium">  
+        <c:campingHeader/>
+        <section class="slds-card__body">
+            <div id="list" class="row">
+                <aura:iteration items="{!v.items}" var="item">
+                    <c:campingListItem item="{!item}"/><br/><br/>
+                </aura:iteration>
+            </div>
+        </section>
+    </div>
+    
+</aura:component> 
+<!--  <ol>
+       <li>Bug Spray</li>
+       <li>Bear Repellant</li>
+       <li>Goat Food</li>      
+    </ol>
+</aura:component> -->

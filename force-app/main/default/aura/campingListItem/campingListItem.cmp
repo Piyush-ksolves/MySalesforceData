@@ -1,0 +1,29 @@
+<!-- 
+Use an expression to display Name, Price__c, Quantity__c, and Packed__c
+Use appropriately formatted number fields to display Price__c and Quantity__c
+Use a toggle to display Packed__c status
+
+Add a button labeled Packed! that calls the packItem controller function when clicked.
+The controller function should:
+Mark the item attribute created in the previous challenge as Packed__c using a value
+ of true
+Disable the button by marking the disabled attribute using a value of true
+
+
+-->
+<aura:component >
+    <aura:attribute name="item" type="Camping_Item__c"  required = "true" default="{ 'sobjectType': 'Camping_Item__c',
+                                                                                   'Name': 'test-item',
+                                                                                   'Price__c': 10,
+                                                                                   'Quantity__c': 1,
+                                                                                   'Packed__c': false}"/>
+    <p> Name: <ui:outputText value= "{!v.item.Name}" /></p>
+    <p> Price: <lightning:formattedNumber value= "{!v.item.Price}" style="currency" /></p>
+    <p> Quantity: <lightning:formattedNumber  value="{!v.item.Quantity__c}"/></p>
+    <p>Packed: <lightning:input type="toggle" 
+                                label="Packed?" 
+                                name="packed" 
+                                checked="{!v.item.Packed__c}" /></p>  
+    
+    <lightning:button value="Packed" label="Packed!" onclick="{!c.packItem}"/>
+</aura:component>
